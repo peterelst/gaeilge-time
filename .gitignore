@@ -2,6 +2,9 @@
 node_modules/
 package-lock.json
 
-# Build outputs
 dist/
+!site/dist/
+
+# Build outputs
+# dist/
 build/
