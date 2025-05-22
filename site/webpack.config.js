@@ -10,6 +10,7 @@ module.exports = {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -26,6 +27,7 @@ module.exports = {
             presets: ['@babel/preset-env'],
           },
         },
+        type: 'javascript/auto',
       },
     ],
   },
