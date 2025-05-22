@@ -1,9 +1,18 @@
 {
   "name": "gaeilge-time",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Get idiomatic Irish (Gaeilge) time phrases programmatically.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -20,11 +29,14 @@
     "clock",
     "date"
   ],
-  "author": "Peter",
+  "author": "Peter Elst",
   "license": "MIT",
   "funding": {
     "type": "buymeacoffee",
     "url": "https://www.buymeacoffee.com/peterelst"
+  },
+  "engines": {
+    "node": ">=14"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

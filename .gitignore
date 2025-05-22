@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+dist/
+!site/dist/
+
+# Build outputs
+# dist/
+build/
