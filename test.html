@@ -63,9 +63,9 @@
         <li class="header">Time,Irish Phrase,Literal Translation</li>
     </ul>
 
-    <script src="js/literal.js"></script>
     <script type="module">
         import { getIrishTimePhrase } from 'https://esm.sh/gaeilge-time@latest';
+        import { getLiteralTranslation } from './js/literal.js';
 
         function generateAllTimes() {
             const timeList = document.getElementById('timeList');
