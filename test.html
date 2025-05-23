@@ -1,105 +1,150 @@
 <!DOCTYPE html>
-<html lang="ga">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gach Am Gaeilge - CSV Format</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 20px;
-      background: #0d1b2a;
-      font-family: 'Segoe UI', sans-serif;
-      color: white;
-    }
-
-    #timeList {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      font-size: 1rem;
-      line-height: 1.5;
-      font-family: monospace;
-    }
-
-    .time-entry {
-      padding: 4px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      white-space: pre;
-    }
-
-    #copyButton {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 10px 20px;
-      background: #2e1a47;
-      border: none;
-      border-radius: 4px;
-      color: white;
-      cursor: pointer;
-    }
-
-    #copyButton:hover {
-      background: #3e2a57;
-    }
-
-    .header {
-      font-weight: bold;
-      margin-bottom: 10px;
-      border-bottom: 2px solid white;
-      padding-bottom: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irish Time Phrases Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .time-entry {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .time {
+            font-weight: bold;
+            color: #333;
+        }
+        .irish {
+            font-size: 1.1em;
+            color: #2c5530;
+            margin: 5px 0;
+        }
+        .english {
+            font-style: italic;
+            color: #666;
+            margin: 5px 0;
+        }
+        .error {
+            color: #d32f2f;
+        }
+    </style>
 </head>
 <body>
-  <button id="copyButton">Copy CSV</button>
-  <ul id="timeList">
-    <li class="header">Time,Irish Phrase</li>
-  </ul>
+    <h1>Irish Time Phrases with Literal Translations</h1>
+    <div id="time-list"></div>
 
-  <script type="module">
-    import { getIrishTimePhrase } from 'https://esm.sh/gaeilge-time@latest';
+    <script src="js/literal.js"></script>
+    <script>
+        // Generate all time phrases for a 24-hour period
+        function generateAllTimes() {
+            const times = [];
 
-    function generateAllTimes() {
-      const timeList = document.getElementById('timeList');
-      const times = ['Time,Irish Phrase'];
+            for (let hour = 0; hour < 24; hour++) {
+                for (let minute = 0; minute < 60; minute++) {
+                    const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                    const date = new Date();
+                    date.setHours(hour);
+                    date.setMinutes(minute);
 
-      // Generate all possible minute combinations
-      for (let hour = 0; hour < 24; hour++) {
-        for (let minute = 0; minute < 60; minute++) {
-          // Create a date object for this time
-          const date = new Date();
-          date.setHours(hour);
-          date.setMinutes(minute);
+                    const irishPhrase = getIrishTimePhrase(date);
+                    times.push({
+                        time: timeString,
+                        irish: irishPhrase
+                    });
+                }
+            }
 
-          // Get the Irish phrase for this time
-          const phrase = getIrishTimePhrase(date);
-          const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-
-          // Create CSV row
-          const csvRow = `${timeStr},${phrase}`;
-
-          // Add to our list
-          const li = document.createElement('li');
-          li.className = 'time-entry';
-          li.textContent = csvRow;
-          timeList.appendChild(li);
-          times.push(csvRow);
+            return times;
         }
-      }
 
-      // Add copy functionality
-      document.getElementById('copyButton').addEventListener('click', () => {
-        const text = times.join('\n');
-        navigator.clipboard.writeText(text).then(() => {
-          alert('CSV data copied to clipboard!');
-        });
-      });
-    }
+        // Simple version of getIrishTimePhrase for testing
+        function getIrishTimePhrase(date) {
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+            const nextHour = (hour + 1) % 24;
 
-    // Generate all times when the page loads
-    generateAllTimes();
-  </script>
+            const irishHour = (h) => {
+                const hours = {
+                    0: "dhá dhéag", 1: "haon", 2: "dhá", 3: "trí", 4: "ceathair",
+                    5: "cúig", 6: "sé", 7: "seacht", 8: "hocht", 9: "naoi",
+                    10: "deich", 11: "haon déag", 12: "dhá dhéag"
+                };
+                return hours[h % 12];
+            };
+
+            const minuteToIrishPhrase = (m) => {
+                const base = {
+                    1: "aon", 2: "dhá", 3: "trí", 4: "ceithre", 5: "cúig", 6: "sé",
+                    7: "seacht", 8: "ocht", 9: "naoi", 10: "deich", 11: "a haon déag",
+                    12: "a dó dhéag", 13: "a trí déag", 14: "a ceathair déag",
+                    15: "a cúig déag", 16: "a sé déag", 17: "a seacht déag",
+                    18: "a ocht déag", 19: "a naoi déag", 20: "fiche", 30: "tríocha"
+                };
+
+                const fused = {
+                    21: "fiche is a haon", 22: "fiche is a dó", 23: "fiche is a trí", 24: "fiche is a ceathair",
+                    25: "fiche is a cúig", 26: "fiche is a sé", 27: "fiche is a seacht", 28: "fiche is a ocht",
+                    29: "fiche is a naoi", 31: "tríocha is a haon", 32: "tríocha is a dó", 33: "tríocha is a trí",
+                    34: "tríocha is a ceathair", 35: "tríocha is a cúig", 36: "tríocha is a sé",
+                    37: "tríocha is a seacht", 38: "tríocha is a ocht", 39: "tríocha is a naoi"
+                };
+
+                if (m === 1) {
+                    return "aon nóiméad amháin";
+                } else if (m <= 20 || m === 30) {
+                    return `${base[m]} nóiméad`;
+                } else if (fused[m]) {
+                    return `${fused[m]} nóiméad`;
+                } else {
+                    return `${m} nóiméad`;
+                }
+            };
+
+            if (minute === 0) {
+                return `Tá sé a ${irishHour(hour)} a chlog`;
+            } else if (minute === 30) {
+                return `Tá sé leathuair tar éis a ${irishHour(hour)}`;
+            } else if (minute < 30) {
+                return `Tá sé ${minuteToIrishPhrase(minute)} tar éis a ${irishHour(hour)}`;
+            } else {
+                const toMinute = 60 - minute;
+                return `Tá sé ${minuteToIrishPhrase(toMinute)} chun a ${irishHour(nextHour)}`;
+            }
+        }
+
+        // Display all times
+        function displayTimes() {
+            const times = generateAllTimes();
+            const container = document.getElementById('time-list');
+
+            times.forEach(timeData => {
+                const translation = getLiteralTranslation(timeData.irish);
+
+                const timeEntry = document.createElement('div');
+                timeEntry.className = 'time-entry';
+
+                const isError = translation === 'Translation not found';
+
+                timeEntry.innerHTML = `
+                    <div class="time">${timeData.time}</div>
+                    <div class="irish">${timeData.irish}</div>
+                    <div class="english ${isError ? 'error' : ''}">${translation}</div>
+                `;
+
+                container.appendChild(timeEntry);
+            });
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', displayTimes);
+    </script>
 </body>
 </html>
