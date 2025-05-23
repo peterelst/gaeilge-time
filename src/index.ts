@@ -5,7 +5,7 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
 
   const irishHour = (h: number): string => {
     const hours: { [key: number]: string } = {
-      0: "dhá dhéag", 1: "haon", 2: "dó", 3: "trí", 4: "ceathair",
+      0: "dhá dhéag", 1: "haon", 2: "dhá", 3: "trí", 4: "ceathair",
       5: "cúig", 6: "sé", 7: "seacht", 8: "hocht", 9: "naoi",
       10: "deich", 11: "haon déag", 12: "dhá dhéag"
     };
@@ -22,11 +22,11 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
     };
 
     const fused: { [key: number]: string } = {
-      21: "fiche haon", 22: "fiche dó", 23: "fiche trí", 24: "fiche ceathair", 25: "fiche cúig",
-      26: "fiche sé", 27: "fiche seacht", 28: "fiche ocht", 29: "fiche naoi",
-      31: "tríocha haon", 32: "tríocha dó", 33: "tríocha trí", 34: "tríocha ceathair",
-      35: "tríocha cúig", 36: "tríocha sé", 37: "tríocha seacht",
-      38: "tríocha ocht", 39: "tríocha naoi"
+      21: "fiche is a haon", 22: "fiche is a dó", 23: "fiche is a trí", 24: "fiche is a ceathair",
+      25: "fiche is a cúig", 26: "fiche is a sé", 27: "fiche is a seacht", 28: "fiche is a ocht",
+      29: "fiche is a naoi", 31: "tríocha is a haon", 32: "tríocha is a dó", 33: "tríocha is a trí",
+      34: "tríocha is a ceathair", 35: "tríocha is a cúig", 36: "tríocha is a sé",
+      37: "tríocha is a seacht", 38: "tríocha is a ocht", 39: "tríocha is a naoi"
     };
 
     if (m === 1) {
