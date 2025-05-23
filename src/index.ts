@@ -29,7 +29,9 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
       38: "tríocha ocht", 39: "tríocha naoi"
     };
 
-    if (m <= 20 || m === 30) {
+    if (m === 1) {
+      return "aon nóiméad amháin";
+    } else if (m <= 20 || m === 30) {
       return `${base[m]} nóiméad`;
     } else if (fused[m]) {
       return `${fused[m]} nóiméad`;
