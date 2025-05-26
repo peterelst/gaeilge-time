@@ -17,7 +17,7 @@
     "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
-    "deploy": "gh-pages -d site/dist --cname www.gaeilgetime.ie"
+    "deploy": "cd site && npm run deploy"
   },
   "repository": {
     "type": "git",
