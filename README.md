@@ -22,7 +22,7 @@ console.log(currentTimeInIrish);
 const specificDate = new Date('2024-03-15T14:45:00');
 const specificTimeInIrish = getIrishTimePhrase(specificDate);
 console.log(specificTimeInIrish);
-// Output: "Tá sé cúig déag chun a trí" (It is quarter to three)
+// Output: "Tá sé ceathrú chun a trí" (It is quarter to three)
 ```
 
 ## Time Format Patterns
