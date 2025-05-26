@@ -1,6 +1,6 @@
 {
   "name": "gaeilge-time",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Get idiomatic Irish (Gaeilge) time phrases programmatically.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

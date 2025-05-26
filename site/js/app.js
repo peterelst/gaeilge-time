@@ -36,11 +36,23 @@ class AudioPlayer {
     this.currentAudio = new Audio(`audio/${audioFile}`);
     this.currentAudio.playbackRate = parseFloat(this.playbackSpeed);
     this.lastAudioFile = audioFile;
+
+    // Add error event listener for debugging
+    this.currentAudio.addEventListener('error', (e) => {
+      console.error('Audio error for file:', audioFile, e);
+      console.error('Error details:', {
+        code: e.target.error?.code,
+        message: e.target.error?.message,
+        src: e.target.src
+      });
+    });
+
     try {
       this.currentAudio.currentTime = 0;
       await this.currentAudio.play();
       return true;
     } catch (error) {
+      console.error('Audio play error for file:', audioFile, error);
       return false;
     }
   }
@@ -107,10 +119,22 @@ class App {
     try {
       const audio = new Audio('audio/silence.mp3');
       audio.volume = 0;
+
+      // Add error event listener for debugging
+      audio.addEventListener('error', (e) => {
+        console.error('Autoplay check audio error for silence.mp3:', e);
+        console.error('Error details:', {
+          code: e.target.error?.code,
+          message: e.target.error?.message,
+          src: e.target.src
+        });
+      });
+
       await audio.play();
       audio.pause();
       this.autoplayToggle.disabled = false;
     } catch (err) {
+      console.error('Autoplay check failed:', err);
       this.autoplayToggle.disabled = true;
       this.autoplayToggle.checked = false;
       this.settings.autoplayAudio = false;

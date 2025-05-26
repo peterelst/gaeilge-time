@@ -5,32 +5,32 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
 
   const irishHour = (h: number): string => {
     const hours: { [key: number]: string } = {
-      0: "dhá dhéag", 1: "haon", 2: "dhá", 3: "trí", 4: "ceathair",
+      0: "dó dhéag", 1: "haon", 2: "dó", 3: "trí", 4: "ceathair",
       5: "cúig", 6: "sé", 7: "seacht", 8: "hocht", 9: "naoi",
-      10: "deich", 11: "haon déag", 12: "dhá dhéag"
+      10: "deich", 11: "haon déag", 12: "dó dhéag"
     };
     return hours[h % 12];
   };
 
   const minuteToIrishPhrase = (m: number): string => {
     const base: { [key: number]: string } = {
-      1: "aon", 2: "dhá", 3: "trí", 4: "ceithre", 5: "cúig", 6: "sé",
-      7: "seacht", 8: "ocht", 9: "naoi", 10: "deich", 11: "a haon déag",
-      12: "a dó dhéag", 13: "a trí déag", 14: "a ceathair déag",
+      1: "a haon", 2: "a dó", 3: "a trí", 4: "a ceathair", 5: "a cúig",
+      6: "a sé", 7: "a seacht", 8: "a hocht", 9: "a naoi", 10: "a deich",
+      11: "a haon déag", 12: "a dó dhéag", 13: "a trí déag", 14: "a ceathair déag",
       15: "a cúig déag", 16: "a sé déag", 17: "a seacht déag",
-      18: "a ocht déag", 19: "a naoi déag", 20: "fiche", 30: "tríocha"
+      18: "a hocht déag", 19: "a naoi déag", 20: "fiche", 30: "tríocha"
     };
 
     const fused: { [key: number]: string } = {
       21: "fiche is a haon", 22: "fiche is a dó", 23: "fiche is a trí", 24: "fiche is a ceathair",
-      25: "fiche is a cúig", 26: "fiche is a sé", 27: "fiche is a seacht", 28: "fiche is a ocht",
+      25: "fiche is a cúig", 26: "fiche is a sé", 27: "fiche is a seacht", 28: "fiche is a hocht",
       29: "fiche is a naoi", 31: "tríocha is a haon", 32: "tríocha is a dó", 33: "tríocha is a trí",
       34: "tríocha is a ceathair", 35: "tríocha is a cúig", 36: "tríocha is a sé",
-      37: "tríocha is a seacht", 38: "tríocha is a ocht", 39: "tríocha is a naoi"
+      37: "tríocha is a seacht", 38: "tríocha is a hocht", 39: "tríocha is a naoi"
     };
 
     if (m === 1) {
-      return "aon nóiméad amháin";
+      return "a haon nóiméad";
     } else if (m <= 20 || m === 30) {
       return `${base[m]} nóiméad`;
     } else if (fused[m]) {
@@ -42,8 +42,12 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
 
   if (minute === 0) {
     return `Tá sé a ${irishHour(hour)} a chlog`;
+  } else if (minute === 15) {
+    return `Tá sé ceathrú tar éis a ${irishHour(hour)}`;
   } else if (minute === 30) {
     return `Tá sé leathuair tar éis a ${irishHour(hour)}`;
+  } else if (minute === 45) {
+    return `Tá sé ceathrú chun a ${irishHour(nextHour)}`;
   } else if (minute < 30) {
     return `Tá sé ${minuteToIrishPhrase(minute)} tar éis a ${irishHour(hour)}`;
   } else {

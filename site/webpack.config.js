@@ -47,6 +47,7 @@ module.exports = {
         { from: 'audio', to: 'audio' },
         { from: 'js/literal.js', to: 'js/' },
         { from: 'test.html', to: '.'},
+        { from: 'audio-test.html', to: '.'},
       ],
     }),
   ],
