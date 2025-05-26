@@ -35,26 +35,22 @@ export function getLiteralTranslation(irishPhrase) {
       }
     };
 
-    const irishHour = (h, withPrefix = false) => {
+    const irishHour = (h) => {
       const hours = {
         0: "dó dhéag", 1: "haon", 2: "dó", 3: "trí", 4: "ceathair",
         5: "cúig", 6: "sé", 7: "seacht", 8: "hocht", 9: "naoi",
         10: "deich", 11: "haon déag", 12: "dó dhéag"
       };
-      if (withPrefix) {
-        if (h % 12 === 0) return "a dó dhéag";
-        return `a ${hours[h % 12]}`;
-      }
       return hours[h % 12];
     };
 
     const minuteToIrishPhrase = (m) => {
       const base = {
-        1: "a haon", 2: "a dó", 3: "a trí", 4: "a ceathair", 5: "a cúig",
-        6: "a sé", 7: "a seacht", 8: "a hocht", 9: "a naoi", 10: "a deich",
-        11: "a haon déag", 12: "a dó dhéag", 13: "a trí déag", 14: "a ceathair déag",
-        15: "a cúig déag", 16: "a sé déag", 17: "a seacht déag",
-        18: "a hocht déag", 19: "a naoi déag", 20: "fiche", 30: "tríocha"
+        1: "haon", 2: "dó", 3: "trí", 4: "ceathair", 5: "cúig",
+        6: "sé", 7: "seacht", 8: "hocht", 9: "naoi", 10: "deich",
+        11: "haon déag", 12: "dó dhéag", 13: "trí déag", 14: "ceathair déag",
+        15: "cúig déag", 16: "sé déag", 17: "seacht déag",
+        18: "hocht déag", 19: "naoi déag", 20: "fiche", 30: "tríocha"
       };
       const fused = {
         21: "fiche is a haon", 22: "fiche is a dó", 23: "fiche is a trí", 24: "fiche is a ceathair",
@@ -64,7 +60,7 @@ export function getLiteralTranslation(irishPhrase) {
         37: "tríocha is a seacht", 38: "tríocha is a hocht", 39: "tríocha is a naoi"
       };
       if (m === 1) {
-        return "a haon nóiméad";
+        return "haon nóiméad";
       } else if (m <= 20 || m === 30) {
         return `${base[m]} nóiméad`;
       } else if (fused[m]) {
