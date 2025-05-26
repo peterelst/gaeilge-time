@@ -12,10 +12,14 @@ describe('Irish Time Phrase', () => {
       { input: '2025-05-21T00:00:00', expected: 'Tá sé a dó dhéag a chlog' },
       { input: '2025-05-21T12:00:00', expected: 'Tá sé a dó dhéag a chlog' },
 
-      // Just past the hour
-      { input: '2025-05-21T00:01:00', expected: 'Tá sé a haon nóiméad tar éis a dó dhéag' },
-      { input: '2025-05-21T12:01:00', expected: 'Tá sé a haon nóiméad tar éis a dó dhéag' },
-      { input: '2025-05-21T01:02:00', expected: 'Tá sé a dó nóiméad tar éis a haon' },
+      // Just past the hour (1–9 minutes → no “a” prefix)
+      { input: '2025-05-21T00:01:00', expected: 'Tá sé haon nóiméad tar éis a dó dhéag' },
+      { input: '2025-05-21T12:01:00', expected: 'Tá sé haon nóiméad tar éis a dó dhéag' },
+      { input: '2025-05-21T01:02:00', expected: 'Tá sé dó nóiméad tar éis a haon' },
+      { input: '2025-05-21T01:03:00', expected: 'Tá sé trí nóiméad tar éis a haon' },
+      { input: '2025-05-21T01:04:00', expected: 'Tá sé ceathair nóiméad tar éis a haon' },
+      { input: '2025-05-21T01:05:00', expected: 'Tá sé cúig nóiméad tar éis a haon' },
+      { input: '2025-05-21T01:06:00', expected: 'Tá sé sé nóiméad tar éis a haon' },
 
       // Quarter past & to
       { input: '2025-05-21T04:15:00', expected: 'Tá sé ceathrú tar éis a ceathair' },
@@ -36,7 +40,7 @@ describe('Irish Time Phrase', () => {
 
       // Correct "to" logic
       { input: '2025-05-21T22:38:00', expected: 'Tá sé fiche is a dó nóiméad chun a haon déag' },
-      { input: '2025-05-21T23:59:00', expected: 'Tá sé a haon nóiméad chun a dó dhéag' }
+      { input: '2025-05-21T23:59:00', expected: 'Tá sé haon nóiméad chun a dó dhéag' }
     ];
 
     test.each(testCases)('formats time correctly for $input', ({ input, expected }) => {

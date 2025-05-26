@@ -15,8 +15,8 @@ function getIrishTimePhrase(date = new Date()) {
     };
     const minuteToIrishPhrase = (m) => {
         const base = {
-            1: "a haon", 2: "a dó", 3: "a trí", 4: "a ceathair", 5: "a cúig",
-            6: "a sé", 7: "a seacht", 8: "a hocht", 9: "a naoi", 10: "a deich",
+            1: "haon", 2: "dó", 3: "trí", 4: "ceathair", 5: "cúig",
+            6: "sé", 7: "seacht", 8: "hocht", 9: "naoi", 10: "a deich",
             11: "a haon déag", 12: "a dó dhéag", 13: "a trí déag", 14: "a ceathair déag",
             15: "a cúig déag", 16: "a sé déag", 17: "a seacht déag",
             18: "a hocht déag", 19: "a naoi déag", 20: "fiche", 30: "tríocha"
@@ -28,10 +28,7 @@ function getIrishTimePhrase(date = new Date()) {
             34: "tríocha is a ceathair", 35: "tríocha is a cúig", 36: "tríocha is a sé",
             37: "tríocha is a seacht", 38: "tríocha is a hocht", 39: "tríocha is a naoi"
         };
-        if (m === 1) {
-            return "a haon nóiméad";
-        }
-        else if (m <= 20 || m === 30) {
+        if (m <= 20 || m === 30) {
             return `${base[m]} nóiméad`;
         }
         else if (fused[m]) {
