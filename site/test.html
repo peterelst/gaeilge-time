@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ga">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gach Am Gaeilge - CSV Format</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 20px;
+            background: #0d1b2a;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+        }
+
+        #timeList {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.5;
+            font-family: monospace;
+        }
+
+        .time-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: pre;
+        }
+
+        .time-entry.error {
+            background-color: #d32f2f;
+            color: white;
+        }
+
+        #copyButton {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #2e1a47;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        #copyButton:hover {
+            background: #3e2a57;
+        }
+
+        .header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 2px solid white;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button id="copyButton">Copy CSV</button>
+    <ul id="timeList">
+        <li class="header">Time,Irish Phrase,Literal Translation</li>
+    </ul>
+
+    <script type="module">
+        import { getIrishTimePhrase } from 'https://esm.sh/gaeilge-time@1.0.4';
+        import { getLiteralTranslation } from './js/literal.js';
+
+        function generateAllTimes() {
+            const timeList = document.getElementById('timeList');
+            const times = ['Time,Irish Phrase,Literal Translation'];
+
+            // Generate all possible minute combinations
+            for (let hour = 0; hour < 24; hour++) {
+                for (let minute = 0; minute < 60; minute++) {
+                    // Create a date object for this time
+                    const date = new Date();
+                    date.setHours(hour);
+                    date.setMinutes(minute);
+
+                    // Get the Irish phrase for this time
+                    const phrase = getIrishTimePhrase(date);
+                    const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+                    // Get literal translation
+                    const literalTranslation = getLiteralTranslation(phrase);
+                    const isError = literalTranslation === 'Translation not found';
+
+                    // Create CSV row
+                    const csvRow = `${timeStr},${phrase},${literalTranslation}`;
+
+                    // Add to our list
+                    const li = document.createElement('li');
+                    li.className = 'time-entry';
+                    if (isError) {
+                        li.classList.add('error');
+                    }
+                    li.textContent = csvRow;
+                    timeList.appendChild(li);
+                    times.push(csvRow);
+                }
+            }
+
+            // Add copy functionality
+            document.getElementById('copyButton').addEventListener('click', () => {
+                const text = times.join('\n');
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('CSV data copied to clipboard!');
+                });
+            });
+        }
+
+        // Generate all times when the page loads
+        generateAllTimes();
+    </script>
+</body>
+</html>

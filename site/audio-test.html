@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test - Gaeilge Time</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #0d1b2a;
+            color: white;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+        }
+        .error {
+            background-color: #d32f2f;
+        }
+        .success {
+            background-color: #2e7d32;
+        }
+        button {
+            padding: 5px 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 3px;
+            background: #1976d2;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #1565c0;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Decoding Test</h1>
+    <p>This page will test various audio files to identify decoding issues.</p>
+
+    <button onclick="testSilence()">Test silence.mp3</button>
+    <button onclick="testCurrentTime()">Test Current Time Audio</button>
+    <button onclick="testRandomFiles()">Test Random Audio Files</button>
+    <button onclick="clearResults()">Clear Results</button>
+
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+
+        function addResult(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = `test-item ${isError ? 'error' : 'success'}`;
+            div.innerHTML = `${new Date().toLocaleTimeString()}: ${message}`;
+            results.appendChild(div);
+        }
+
+        function clearResults() {
+            results.innerHTML = '';
+        }
+
+        async function testAudioFile(filename, description) {
+            try {
+                const audio = new Audio(`audio/${filename}`);
+
+                return new Promise((resolve) => {
+                    let hasErrored = false;
+
+                    audio.addEventListener('error', (e) => {
+                        hasErrored = true;
+                        const errorCode = e.target.error?.code;
+                        const errorMessage = getAudioErrorMessage(errorCode);
+                        addResult(`❌ ${description} (${filename}): ${errorMessage} (Code: ${errorCode})`, true);
+                        resolve(false);
+                    });
+
+                    audio.addEventListener('canplaythrough', () => {
+                        if (!hasErrored) {
+                            addResult(`✅ ${description} (${filename}): Can play through`);
+                            resolve(true);
+                        }
+                    });
+
+                    audio.addEventListener('loadeddata', () => {
+                        if (!hasErrored) {
+                            addResult(`✅ ${description} (${filename}): Data loaded successfully`);
+                        }
+                    });
+
+                    // Set src to trigger loading
+                    audio.load();
+                });
+
+            } catch (error) {
+                addResult(`❌ ${description} (${filename}): Exception - ${error.message}`, true);
+                return false;
+            }
+        }
+
+        function getAudioErrorMessage(code) {
+            switch(code) {
+                case 1: return 'MEDIA_ERR_ABORTED - User aborted';
+                case 2: return 'MEDIA_ERR_NETWORK - Network error';
+                case 3: return 'MEDIA_ERR_DECODE - Decoding error';
+                case 4: return 'MEDIA_ERR_SRC_NOT_SUPPORTED - Source not supported';
+                default: return 'Unknown error';
+            }
+        }
+
+        async function testSilence() {
+            addResult('Testing silence.mp3...');
+            await testAudioFile('silence.mp3', 'Silence file');
+        }
+
+        async function testCurrentTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            if (hours >= 12) hours -= 12;
+            const hoursStr = hours.toString().padStart(2, '0');
+            const minutesStr = minutes.toString().padStart(2, '0');
+            const filename = `${hoursStr}_${minutesStr}.mp3`;
+
+            addResult(`Testing current time audio: ${filename}...`);
+            await testAudioFile(filename, 'Current time');
+        }
+
+        async function testRandomFiles() {
+            addResult('Testing random audio files...');
+
+            // Test some common problematic times
+            const testFiles = [
+                '00_00.mp3',
+                '00_30.mp3',
+                '06_00.mp3',
+                '06_30.mp3',
+                '11_59.mp3'
+            ];
+
+            for (const file of testFiles) {
+                await testAudioFile(file, `Random test`);
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+
+        // Auto-run current time test on load
+        window.addEventListener('load', () => {
+            addResult('Audio test page loaded. Click buttons to test audio files.');
+        });
+    </script>
+</body>
+</html>
