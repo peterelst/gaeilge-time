@@ -64,7 +64,7 @@
     </ul>
 
     <script type="module">
-        import { getIrishTimePhrase } from 'https://esm.sh/gaeilge-time@latest';
+        import { getIrishTimePhrase } from 'https://esm.sh/gaeilge-time@1.0.9';
         import { getLiteralTranslation } from './js/literal.js';
 
         function generateAllTimes() {
@@ -79,13 +79,13 @@
                     const phrase = getIrishTimePhrase(date);
 
                     // FIX: Pass the 'date' object, not the 'phrase', to getLiteralTranslation
-                    const literalTranslation = getLiteralTranslation(date); 
+                    const literalTranslation = getLiteralTranslation(date);
 
                     const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-                    
+
                     // The error check in getLiteralTranslation will now handle it internally if the date was somehow invalid
                     // You might want to adjust your error handling here if getLiteralTranslation returns a specific error string
-                    const isError = literalTranslation.startsWith('Error:'); 
+                    const isError = literalTranslation.startsWith('Error:');
 
                     const csvRow = `${timeStr},${phrase},${literalTranslation}`;
 
