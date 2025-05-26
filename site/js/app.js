@@ -9,6 +9,7 @@ class AudioPlayer {
     this.isRepeating = false;
     this.playbackSpeed = 0.8;
   }
+
   getAudioFileName() {
     const now = new Date();
     let hours = now.getHours();
@@ -18,18 +19,21 @@ class AudioPlayer {
     const minutesStr = minutes.toString().padStart(2, '0');
     return `${hoursStr}_${minutesStr}.mp3`;
   }
+
   setPlaybackSpeed(speed) {
     this.playbackSpeed = speed;
     if (this.currentAudio) {
       this.currentAudio.playbackRate = parseFloat(speed);
     }
   }
+
   stop() {
     if (this.currentAudio) {
       this.currentAudio.pause();
       this.currentAudio.currentTime = 0;
     }
   }
+
   async play(audioFile) {
     this.stop();
     this.isRepeating = false;
@@ -37,7 +41,6 @@ class AudioPlayer {
     this.currentAudio.playbackRate = parseFloat(this.playbackSpeed);
     this.lastAudioFile = audioFile;
 
-    // Add error event listener for debugging
     this.currentAudio.addEventListener('error', (e) => {
       console.error('Audio error for file:', audioFile, e);
       console.error('Error details:', {
@@ -56,9 +59,11 @@ class AudioPlayer {
       return false;
     }
   }
+
   isPlaying() {
     return this.currentAudio && !this.currentAudio.paused;
   }
+
   getCurrentFile() {
     return this.lastAudioFile;
   }
@@ -85,9 +90,11 @@ class App {
     };
     this.initializeApp();
   }
+
   async initializeApp() {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     if (isIOS) {
       this.autoplayToggle.disabled = true;
       this.autoplayToggle.checked = false;
@@ -97,6 +104,7 @@ class App {
       this.autoplayToggle.disabled = true;
       this.addAutoplayCheckOnUserInteraction();
     }
+
     this.showTranslationToggle.checked = this.settings.showTranslation;
     this.autoplayToggle.checked = this.settings.autoplayAudio;
     this.speedSlider.value = this.settings.playbackSpeed;
@@ -108,6 +116,7 @@ class App {
     document.getElementById('play-icon').classList.remove('hidden');
     document.getElementById('settings-icon').classList.remove('hidden');
   }
+
   addAutoplayCheckOnUserInteraction() {
     const handler = async () => {
       await this.checkAutoplaySupport();
@@ -115,12 +124,12 @@ class App {
     };
     window.addEventListener('click', handler, true);
   }
+
   async checkAutoplaySupport() {
     try {
       const audio = new Audio('audio/silence.mp3');
       audio.volume = 0;
 
-      // Add error event listener for debugging
       audio.addEventListener('error', (e) => {
         console.error('Autoplay check audio error for silence.mp3:', e);
         console.error('Error details:', {
@@ -141,20 +150,24 @@ class App {
       localStorage.setItem('autoplayAudio', 'false');
     }
   }
+
   setupEventListeners() {
     this.settingsIcon.addEventListener('click', () => {
       this.settingsPanel.classList.toggle('open');
     });
+
     document.addEventListener('click', (e) => {
       if (!this.settingsPanel.contains(e.target) && e.target !== this.settingsIcon) {
         this.settingsPanel.classList.remove('open');
       }
     });
+
     this.showTranslationToggle.addEventListener('change', (e) => {
       this.settings.showTranslation = e.target.checked;
       localStorage.setItem('showTranslation', this.settings.showTranslation);
       this.updateTranslationVisibility();
     });
+
     this.autoplayToggle.addEventListener('change', (e) => {
       this.settings.autoplayAudio = e.target.checked;
       localStorage.setItem('autoplayAudio', this.settings.autoplayAudio);
@@ -163,26 +176,31 @@ class App {
         this.playTimeAudio();
       }
     });
+
     this.speedSlider.addEventListener('input', (e) => {
       this.settings.playbackSpeed = e.target.value;
       this.speedValue.textContent = this.settings.playbackSpeed + 'x';
       localStorage.setItem('playbackSpeed', this.settings.playbackSpeed);
       audioPlayer.setPlaybackSpeed(this.settings.playbackSpeed);
     });
+
     this.playIcon.addEventListener('click', (e) => {
       e.stopPropagation();
       this.hasClickedOnce = true;
       this.playTimeAudio();
     });
+
     this.timeEl.addEventListener('click', () => {
       this.hasClickedOnce = true;
       this.playTimeAudio();
     });
   }
+
   updateTranslationVisibility() {
     this.translationEl.style.display = this.settings.showTranslation ? 'block' : 'none';
     this.timeWordsEl.style.display = 'none';
   }
+
   togglePlayIcon(state) {
     if (state === 'play') {
       this.playIcon.src = 'images/play-icon.svg';
@@ -192,6 +210,7 @@ class App {
       audioPlayer.isRepeating = true;
     }
   }
+
   async playTimeAudio() {
     const audioFile = audioPlayer.getAudioFileName();
     const success = await audioPlayer.play(audioFile);
@@ -201,15 +220,21 @@ class App {
       this.togglePlayIcon('play');
     }
   }
+
   update() {
-    let irishPhrase = getIrishTimePhrase();
+    const now = new Date();
+    let irishPhrase = getIrishTimePhrase(now);
+    const literalTranslation = getLiteralTranslation(now);
+
     const currentAudioFile = audioPlayer.getAudioFileName();
     if (currentAudioFile !== audioPlayer.getCurrentFile()) {
       this.togglePlayIcon('play');
     }
+
     this.timeEl.textContent = irishPhrase;
-    this.translationEl.innerHTML = `<span class="literal-label">Literal: </span>${getLiteralTranslation(irishPhrase)}`;
+    this.translationEl.innerHTML = `<span class="literal-label">Literal: </span>${literalTranslation}`;
     document.title = `Gaeilge Time - ${irishPhrase} 💚`;
+
     if (this.settings.autoplayAudio && this.hasClickedOnce) {
       if (currentAudioFile !== audioPlayer.getCurrentFile()) {
         this.playTimeAudio();
@@ -223,8 +248,8 @@ const audioPlayer = new AudioPlayer();
 window.appInstance = null;
 document.addEventListener('DOMContentLoaded', () => {
   window.appInstance = new App();
+
   const ANIMATION_DURATION = 90;
-  const BG_SIZE = 800;
   const BG_KEY = 'backgroundAnimProgress';
   let startTimestamp = null;
   let offset = 0;
@@ -232,6 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (saved) {
     offset = parseFloat(saved) || 0;
   }
+
   (function setInitialBgPosition() {
     const elapsed = offset % ANIMATION_DURATION;
     const angle = (elapsed / ANIMATION_DURATION) * 2 * Math.PI;
@@ -240,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.backgroundPosition = `${x}% ${y}%`;
     document.documentElement.style.backgroundPosition = `${x}% ${y}%`;
   })();
+
   function animateBackground(ts) {
     if (!startTimestamp) startTimestamp = ts;
     const elapsed = ((ts - startTimestamp) / 1000 + offset) % ANIMATION_DURATION;
@@ -253,7 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(animateBackground);
   }
+
   requestAnimationFrame(animateBackground);
+
   window.addEventListener('beforeunload', () => {
     if (startTimestamp) {
       const now = performance.now();

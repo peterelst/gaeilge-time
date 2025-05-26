@@ -10,7 +10,7 @@ module.exports = {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    publicPath: '',
+    publicPath: '',  // important for GH Pages to work from root
   },
   module: {
     rules: [
@@ -23,17 +23,15 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
+          options: { presets: ['@babel/preset-env'] },
         },
-        type: 'javascript/auto',
       },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: 'index.html',
+      inject: 'body',   // auto-injects JS + CSS
       minify: true,
     }),
     new MiniCssExtractPlugin({
@@ -46,12 +44,9 @@ module.exports = {
         { from: 'images', to: 'images' },
         { from: 'audio', to: 'audio' },
         { from: 'js/literal.js', to: 'js/' },
-        { from: 'test.html', to: '.'},
-        { from: 'audio-test.html', to: '.'},
+        { from: 'test.html', to: '.' },
+        { from: 'audio-test.html', to: '.' },
       ],
     }),
   ],
-  resolve: {
-    extensions: ['.js'],
-  },
 };

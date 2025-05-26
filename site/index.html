@@ -7,14 +7,6 @@
   <link rel="icon" type="image/svg+xml" href="images/irish-heart.svg" />
   <link rel="manifest" href="manifest.json">
 </head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C833ZDR48C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-C833ZDR48C');
-</script>
 <body>
   <div id="time"></div>
   <div id="english">
@@ -23,6 +15,7 @@
   </div>
   <img id="play-icon" class="hidden" src="images/play-icon.svg" width="28" height="28" alt="Play" />
   <img id="settings-icon" class="hidden" src="images/settings-icon.svg" width="28" height="28" alt="Settings" />
+
   <div id="settings-panel">
     <div class="setting-group">
       <label>Show literal translation</label>
@@ -48,18 +41,24 @@
     </div>
     <div class="divider"></div>
     <div class="footer-links">
-      <p style="margin: 0 0 1rem; opacity: 0.5">Go raibh míle maith agaibh to the online Gaeilge community for help with translations and testing! 💚</p>
+      <p style="margin: 0 0 1rem; opacity: 0.5">
+        Go raibh míle maith agaibh to the online Gaeilge community for help with translations and testing! 💚
+      </p>
       <a href="https://buymeacoffee.com/peterelst" target="_blank" class="donate-button">
         <span class="donate-icon">☕</span>
         <span class="donate-text">Ceannaigh caife dom</span>
       </a>
     </div>
   </div>
+
   <div id="loading-bar"><div class="bar"></div></div>
+
+  <%= htmlWebpackPlugin.tags.bodyTags %>
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js');
     }
   </script>
-  <script src="app.js"></script>  </body>
+</body>
 </html>
