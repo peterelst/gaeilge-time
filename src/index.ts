@@ -49,7 +49,7 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
       };
       phrase = `${numbersMap[m]} nóiméad`;
     } else if (m >= 16 && m <= 19) {
-       const numbersMap: { [key: number]: string } = {
+      const numbersMap: { [key: number]: string } = {
         16: "sé déag",
         17: "seacht déag",
         18: "ocht déag",
@@ -83,7 +83,7 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
 
     const hoursMap: { [key: number]: string } = {
       12: "a dó dhéag",
-      1: "a h-aon",
+      1: "a haon",
       2: "a dó",
       3: "a trí",
       4: "a ceathair",
@@ -99,7 +99,7 @@ export function getIrishTimePhrase(date: Date = new Date()): string {
   };
 
   if (minute === 0) {
-    return `Tá sé ${getFormattedHour(hour)} an chloig`;
+    return `Tá sé ${getFormattedHour(hour)} a chlog`;
   } else if (minute === 15) {
     return `Tá sé ceathrú tar éis ${getFormattedHour(hour)}`;
   } else if (minute === 30) {

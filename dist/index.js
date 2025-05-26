@@ -96,7 +96,7 @@ function getIrishTimePhrase(date = new Date()) {
         const displayHour = h % 12 === 0 ? 12 : h % 12;
         const hoursMap = {
             12: "a dó dhéag",
-            1: "a h-aon",
+            1: "a haon",
             2: "a dó",
             3: "a trí",
             4: "a ceathair",
@@ -111,7 +111,7 @@ function getIrishTimePhrase(date = new Date()) {
         return hoursMap[displayHour];
     };
     if (minute === 0) {
-        return `Tá sé ${getFormattedHour(hour)} an chloig`;
+        return `Tá sé ${getFormattedHour(hour)} a chlog`;
     }
     else if (minute === 15) {
         return `Tá sé ceathrú tar éis ${getFormattedHour(hour)}`;
