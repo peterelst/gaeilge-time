@@ -64,33 +64,30 @@
     </ul>
 
     <script type="module">
-        import { getIrishTimePhrase } from 'https://esm.sh/gaeilge-time@1.0.6';
+        import { getIrishTimePhrase } from './js/irish.js';
         import { getLiteralTranslation } from './js/literal.js';
 
         function generateAllTimes() {
             const timeList = document.getElementById('timeList');
             const times = ['Time,Irish Phrase,Literal Translation'];
 
-            // Generate all possible minute combinations
-            for (let hour = 0; hour < 24; hour++) {
+            for (let hour = 0; hour < 12; hour++) {
                 for (let minute = 0; minute < 60; minute++) {
-                    // Create a date object for this time
                     const date = new Date();
+                    date.setFullYear(2000, 0, 1);
                     date.setHours(hour);
                     date.setMinutes(minute);
+                    date.setSeconds(0);
+                    date.setMilliseconds(0);
 
-                    // Get the Irish phrase for this time
-                    const phrase = getIrishTimePhrase(date);
+                    const irishPhrase = getIrishTimePhrase(date);
                     const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
 
-                    // Get literal translation
-                    const literalTranslation = getLiteralTranslation(phrase);
-                    const isError = literalTranslation === 'Translation not found';
+                    const literalTranslation = getLiteralTranslation(date);
+                    const isError = literalTranslation.startsWith('Error:');
 
-                    // Create CSV row
-                    const csvRow = `${timeStr},${phrase},${literalTranslation}`;
+                    const csvRow = `${timeStr},${irishPhrase},${literalTranslation}`;
 
-                    // Add to our list
                     const li = document.createElement('li');
                     li.className = 'time-entry';
                     if (isError) {
@@ -98,20 +95,22 @@
                     }
                     li.textContent = csvRow;
                     timeList.appendChild(li);
+
                     times.push(csvRow);
                 }
             }
 
-            // Add copy functionality
             document.getElementById('copyButton').addEventListener('click', () => {
                 const text = times.join('\n');
                 navigator.clipboard.writeText(text).then(() => {
                     alert('CSV data copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy CSV data. Please try again or copy manually from the page.');
                 });
             });
         }
 
-        // Generate all times when the page loads
         generateAllTimes();
     </script>
 </body>

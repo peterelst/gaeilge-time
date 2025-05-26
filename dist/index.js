@@ -5,56 +5,128 @@ function getIrishTimePhrase(date = new Date()) {
     const hour = date.getHours();
     const minute = date.getMinutes();
     const nextHour = (hour + 1) % 24;
-    const irishHour = (h) => {
-        const hours = {
-            0: "dó dhéag", 1: "haon", 2: "dó", 3: "trí", 4: "ceathair",
-            5: "cúig", 6: "sé", 7: "seacht", 8: "hocht", 9: "naoi",
-            10: "deich", 11: "haon déag", 12: "dó dhéag"
+    const getFormattedHour = (h) => {
+        const displayHour = h % 12 === 0 ? 12 : h % 12;
+        const hoursMap = {
+            12: "a dó dhéag",
+            1: "a haon",
+            2: "a dó",
+            3: "a trí",
+            4: "a ceathair",
+            5: "a cúig",
+            6: "a sé",
+            7: "a seacht",
+            8: "a hocht",
+            9: "a naoi",
+            10: "a deich",
+            11: "a haon déag",
         };
-        return hours[h % 12];
+        return hoursMap[displayHour];
     };
-    const minuteToIrishPhrase = (m) => {
-        const base = {
-            1: "haon", 2: "dó", 3: "trí", 4: "ceathair", 5: "cúig",
-            6: "sé", 7: "seacht", 8: "hocht", 9: "naoi", 10: "a deich",
-            11: "a haon déag", 12: "a dó dhéag", 13: "a trí déag", 14: "a ceathair déag",
-            15: "a cúig déag", 16: "a sé déag", 17: "a seacht déag",
-            18: "a hocht déag", 19: "a naoi déag", 20: "fiche", 30: "tríocha"
-        };
-        const fused = {
-            21: "fiche is a haon", 22: "fiche is a dó", 23: "fiche is a trí", 24: "fiche is a ceathair",
-            25: "fiche is a cúig", 26: "fiche is a sé", 27: "fiche is a seacht", 28: "fiche is a hocht",
-            29: "fiche is a naoi", 31: "tríocha is a haon", 32: "tríocha is a dó", 33: "tríocha is a trí",
-            34: "tríocha is a ceathair", 35: "tríocha is a cúig", 36: "tríocha is a sé",
-            37: "tríocha is a seacht", 38: "tríocha is a hocht", 39: "tríocha is a naoi"
-        };
-        if (m <= 20 || m === 30) {
-            return `${base[m]} nóiméad`;
+    const getFormattedMinutePhrase = (m) => {
+        let phrase;
+        if (m === 1) {
+            phrase = "aon nóiméad";
         }
-        else if (fused[m]) {
-            return `${fused[m]} nóiméad`;
+        else if (m === 2) {
+            phrase = "dhá nóiméad";
+        }
+        else if (m === 3) {
+            phrase = "trí nóiméad";
+        }
+        else if (m === 4) {
+            phrase = "ceithre nóiméad";
+        }
+        else if (m >= 5 && m <= 14) {
+            const numbersMap = {
+                5: "cúig",
+                6: "sé",
+                7: "seacht",
+                8: "ocht",
+                9: "naoi",
+                10: "deich",
+                11: "aon déag",
+                12: "dó dhéag",
+                13: "trí déag",
+                14: "ceithre déag",
+            };
+            phrase = `${numbersMap[m]} nóiméad`;
+        }
+        else if (m >= 16 && m <= 19) {
+            const numbersMap = {
+                16: "sé déag",
+                17: "seacht déag",
+                18: "ocht déag",
+                19: "naoi déag",
+            };
+            phrase = `${numbersMap[m]} nóiméad`;
+        }
+        else if (m === 20) {
+            phrase = "fiche nóiméad";
+        }
+        else if (m >= 21 && m <= 29) {
+            const unit = m % 10;
+            let unitPhrase;
+            if (unit === 1)
+                unitPhrase = "aon";
+            else if (unit === 2)
+                unitPhrase = "dhá";
+            else if (unit === 3)
+                unitPhrase = "trí";
+            else if (unit === 4)
+                unitPhrase = "ceithre";
+            else if (unit === 5)
+                unitPhrase = "cúig";
+            else if (unit === 6)
+                unitPhrase = "sé";
+            else if (unit === 7)
+                unitPhrase = "seacht";
+            else if (unit === 8)
+                unitPhrase = "ocht";
+            else
+                unitPhrase = "naoi";
+            phrase = `fiche is ${unitPhrase} nóiméad`;
         }
         else {
-            return `${m} nóiméad`;
+            phrase = "";
         }
+        return phrase;
+    };
+    const getFormattedNextHour = (h) => {
+        const displayHour = h % 12 === 0 ? 12 : h % 12;
+        const hoursMap = {
+            12: "a dó dhéag",
+            1: "a h-aon",
+            2: "a dó",
+            3: "a trí",
+            4: "a ceathair",
+            5: "a cúig",
+            6: "a sé",
+            7: "a seacht",
+            8: "a hocht",
+            9: "a naoi",
+            10: "a deich",
+            11: "a haon déag",
+        };
+        return hoursMap[displayHour];
     };
     if (minute === 0) {
-        return `Tá sé a ${irishHour(hour)} a chlog`;
+        return `Tá sé ${getFormattedHour(hour)} an chloig`;
     }
     else if (minute === 15) {
-        return `Tá sé ceathrú tar éis a ${irishHour(hour)}`;
+        return `Tá sé ceathrú tar éis ${getFormattedHour(hour)}`;
     }
     else if (minute === 30) {
-        return `Tá sé leathuair tar éis a ${irishHour(hour)}`;
+        return `Tá sé leathuair tar éis ${getFormattedHour(hour)}`;
     }
     else if (minute === 45) {
-        return `Tá sé ceathrú chun a ${irishHour(nextHour)}`;
+        return `Tá sé ceathrú chun ${getFormattedNextHour(nextHour)}`;
     }
     else if (minute < 30) {
-        return `Tá sé ${minuteToIrishPhrase(minute)} tar éis a ${irishHour(hour)}`;
+        return `Tá sé ${getFormattedMinutePhrase(minute)} tar éis ${getFormattedHour(hour)}`;
     }
     else {
         const toMinute = 60 - minute;
-        return `Tá sé ${minuteToIrishPhrase(toMinute)} chun a ${irishHour(nextHour)}`;
+        return `Tá sé ${getFormattedMinutePhrase(toMinute)} chun ${getFormattedNextHour(nextHour)}`;
     }
 }
