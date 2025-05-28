@@ -74,6 +74,7 @@ class App {
     this.timeEl = document.getElementById('time');
     this.translationEl = document.querySelector('.translation');
     this.timeWordsEl = document.querySelector('.time-words');
+    this.settingsButton = document.getElementById('settings-button');
     this.settingsIcon = document.getElementById('settings-icon');
     this.settingsPanel = document.getElementById('settings-panel');
     this.showTranslationToggle = document.getElementById('show-translation');
@@ -92,8 +93,7 @@ class App {
   }
 
   async initializeApp() {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
     if (isIOS) {
       this.autoplayToggle.disabled = true;
@@ -129,7 +129,6 @@ class App {
     try {
       const audio = new Audio('audio/silence.mp3');
       audio.volume = 0;
-
       audio.addEventListener('error', (e) => {
         console.error('Autoplay check audio error for silence.mp3:', e);
         console.error('Error details:', {
@@ -138,7 +137,6 @@ class App {
           src: e.target.src
         });
       });
-
       await audio.play();
       audio.pause();
       this.autoplayToggle.disabled = false;
@@ -152,12 +150,15 @@ class App {
   }
 
   setupEventListeners() {
-    this.settingsIcon.addEventListener('click', () => {
+    this.settingsButton.addEventListener('click', (e) => {
+      e.stopPropagation();
       this.settingsPanel.classList.toggle('open');
     });
 
     document.addEventListener('click', (e) => {
-      if (!this.settingsPanel.contains(e.target) && e.target !== this.settingsIcon) {
+      const clickedInsidePanel = this.settingsPanel.contains(e.target);
+      const clickedOnButton = e.target.closest('#settings-button') !== null;
+      if (!clickedInsidePanel && !clickedOnButton) {
         this.settingsPanel.classList.remove('open');
       }
     });
@@ -225,16 +226,13 @@ class App {
     const now = new Date();
     let irishPhrase = getIrishTimePhrase(now);
     const literalTranslation = getLiteralTranslation(now);
-
     const currentAudioFile = audioPlayer.getAudioFileName();
     if (currentAudioFile !== audioPlayer.getCurrentFile()) {
       this.togglePlayIcon('play');
     }
-
     this.timeEl.textContent = irishPhrase;
     this.translationEl.innerHTML = `<span class="literal-label">Literal: </span>${literalTranslation}`;
     document.title = `Gaeilge Time - ${irishPhrase} 💚`;
-
     if (this.settings.autoplayAudio && this.hasClickedOnce) {
       if (currentAudioFile !== audioPlayer.getCurrentFile()) {
         this.playTimeAudio();
@@ -248,7 +246,6 @@ const audioPlayer = new AudioPlayer();
 window.appInstance = null;
 document.addEventListener('DOMContentLoaded', () => {
   window.appInstance = new App();
-
   const ANIMATION_DURATION = 90;
   const BG_KEY = 'backgroundAnimProgress';
   let startTimestamp = null;
@@ -257,7 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (saved) {
     offset = parseFloat(saved) || 0;
   }
-
   (function setInitialBgPosition() {
     const elapsed = offset % ANIMATION_DURATION;
     const angle = (elapsed / ANIMATION_DURATION) * 2 * Math.PI;
@@ -266,7 +262,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.backgroundPosition = `${x}% ${y}%`;
     document.documentElement.style.backgroundPosition = `${x}% ${y}%`;
   })();
-
   function animateBackground(ts) {
     if (!startTimestamp) startTimestamp = ts;
     const elapsed = ((ts - startTimestamp) / 1000 + offset) % ANIMATION_DURATION;
@@ -280,9 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     requestAnimationFrame(animateBackground);
   }
-
   requestAnimationFrame(animateBackground);
-
   window.addEventListener('beforeunload', () => {
     if (startTimestamp) {
       const now = performance.now();
