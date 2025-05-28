@@ -10,7 +10,7 @@ module.exports = {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    publicPath: '',  // important for GH Pages to work from root
+    publicPath: '', 
   },
   module: {
     rules: [
@@ -46,6 +46,7 @@ module.exports = {
         { from: 'js/literal.js', to: 'js/' },
         { from: 'test.html', to: '.' },
         { from: 'audio-test.html', to: '.' },
+        { from: 'privacy/index.html', to: 'privacy/index.html' },
       ],
     }),
   ],
