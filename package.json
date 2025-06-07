@@ -1,6 +1,6 @@
 {
   "name": "gaeilge-time",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Get idiomatic Irish (Gaeilge) time phrases programmatically.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -42,8 +42,11 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "gh-pages": "^6.3.0",
+    "html-webpack-plugin": "^5.6.3",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.4",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
   }
 }
