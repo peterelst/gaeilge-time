@@ -10,7 +10,7 @@ module.exports = {
     filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
-    publicPath: '', 
+    publicPath: '',
   },
   module: {
     rules: [
@@ -47,6 +47,7 @@ module.exports = {
         { from: 'test.html', to: '.' },
         { from: 'audio-test.html', to: '.' },
         { from: 'privacy/index.html', to: 'privacy/index.html' },
+        { from: 'terms/index.html', to: 'terms/index.html' },
       ],
     }),
   ],
