@@ -43,6 +43,7 @@ module.exports = {
         { from: 'sw.js', to: '.' },
         { from: 'images', to: 'images' },
         { from: 'audio', to: 'audio' },
+        { from: 'android', to: 'android' },
         { from: 'js/literal.js', to: 'js/' },
         { from: 'test.html', to: '.' },
         { from: 'audio-test.html', to: '.' },
