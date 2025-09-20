@@ -44,6 +44,7 @@ module.exports = {
         { from: 'images', to: 'images' },
         { from: 'audio', to: 'audio' },
         { from: 'android', to: 'android' },
+        { from: 'iphone', to: 'iphone' },
         { from: 'js/literal.js', to: 'js/' },
         { from: 'test.html', to: '.' },
         { from: 'audio-test.html', to: '.' },
