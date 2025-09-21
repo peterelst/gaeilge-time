@@ -770,6 +770,7 @@ input:disabled + .toggle-slider:before {
     flex-wrap: nowrap;
     justify-content: flex-start;
     gap: 0.5rem;
+    padding-bottom: 100px;
   }
 
   .app-store-badge, .google-play-badge {
