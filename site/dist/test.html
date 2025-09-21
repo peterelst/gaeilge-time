@@ -1,114 +1,70 @@
 <!DOCTYPE html>
 <html lang="ga">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gach Am Gaeilge - CSV Format</title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 20px;
-            background: #0d1b2a;
-            font-family: 'Segoe UI', sans-serif;
-            color: white;
-        }
-
-        #timeList {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 1rem;
-            line-height: 1.5;
-            font-family: monospace;
-        }
-
-        .time-entry {
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            white-space: pre;
-        }
-
-        .time-entry.error {
-            background-color: #d32f2f;
-            color: white;
-        }
-
-        #copyButton {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background: #2e1a47;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-        }
-
-        #copyButton:hover {
-            background: #3e2a57;
-        }
-
-        .header {
-            font-weight: bold;
-            margin-bottom: 10px;
-            border-bottom: 2px solid white;
-            padding-bottom: 10px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0" />
+  <title>Gaeilge Time 💚</title>
+  <link rel="icon" type="image/svg+xml" href="images/irish-heart.svg" />
+  <link rel="manifest" href="manifest.json">
 </head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C833ZDR48C"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-C833ZDR48C');
+</script>
 <body>
-    <button id="copyButton">Copy CSV</button>
-    <ul id="timeList">
-        <li class="header">Time,Irish Phrase,Literal Translation</li>
-    </ul>
-
-    <script type="module">
-        import { getIrishTimePhrase } from 'https://esm.sh/gaeilge-time@1.1.0';
-        import { getLiteralTranslation } from './js/literal.js';
-
-        function generateAllTimes() {
-            const timeList = document.getElementById('timeList');
-            const times = ['Time,Irish Phrase,Literal Translation'];
-
-            for (let hour = 0; hour < 24; hour++) {
-                for (let minute = 0; minute < 60; minute++) {
-                    const date = new Date();
-                    date.setHours(hour, minute, 0, 0); // Set seconds and milliseconds to 0 for consistency
-
-                    const phrase = getIrishTimePhrase(date);
-
-                    // FIX: Pass the 'date' object, not the 'phrase', to getLiteralTranslation
-                    const literalTranslation = getLiteralTranslation(date);
-
-                    const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-
-                    // The error check in getLiteralTranslation will now handle it internally if the date was somehow invalid
-                    // You might want to adjust your error handling here if getLiteralTranslation returns a specific error string
-                    const isError = literalTranslation.startsWith('Error:');
-
-                    const csvRow = `${timeStr},${phrase},${literalTranslation}`;
-
-                    const li = document.createElement('li');
-                    li.className = 'time-entry';
-                    if (isError) {
-                        li.classList.add('error');
-                    }
-                    li.textContent = csvRow;
-                    timeList.appendChild(li);
-                    times.push(csvRow);
-                }
-            }
-
-            document.getElementById('copyButton').addEventListener('click', () => {
-                const text = times.join('\n');
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('CSV data copied to clipboard!');
-                });
-            });
-        }
-
-        generateAllTimes();
-    </script>
+  <div id="time"></div>
+  <div id="english">
+    <div class="translation"></div>
+    <div class="time-words"></div>
+  </div>
+  <div id="settings-button">
+    <img id="settings-icon" class="hidden" src="images/settings-icon.svg" width="28" height="28" alt="Settings" />
+  </div>
+  <img id="play-icon" class="hidden" src="images/play-icon.svg" width="28" height="28" alt="Play" />
+  <div id="settings-panel">
+    <div class="setting-group">
+      <label>Show literal translation</label>
+      <label class="toggle-switch">
+        <input type="checkbox" id="show-translation" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="setting-group">
+      <label for="autoplay-audio">Autoplay audio</label>
+      <label class="toggle-switch">
+        <input type="checkbox" id="autoplay-audio">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+    <div class="setting-group">
+      <label>Playback speed</label>
+      <div class="slider-container">
+        <input type="range" class="speed-slider" id="speed-slider" min="0.6" max="1" step="0.1" value="0.8">
+        <span class="speed-value" id="speed-value">0.75x</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="footer-links">
+      <p style="margin: 0 0 1rem; opacity: 0.5">
+        Go raibh míle maith agaibh to the online Gaeilge community for help with translations and testing! 💚
+      </p>
+      <a href="https://buymeacoffee.com/peterelst" target="_blank" class="donate-button">
+        <span class="donate-icon">☕</span>
+        <span class="donate-text">Ceannaigh caife dom</span>
+      </a>
+    </div>
+  </div>
+  <div id="loading-bar">
+    <div class="bar"></div>
+  </div>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
 </body>
 </html>
