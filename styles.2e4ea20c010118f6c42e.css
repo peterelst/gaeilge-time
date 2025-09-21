@@ -705,7 +705,7 @@ input:disabled + .toggle-slider:before {
     display: block;
     margin-bottom: 1rem;
     text-align: left;
-    padding-top: 350px;
+    padding-top: 100px;
     padding-bottom: 25px;
   }
 
