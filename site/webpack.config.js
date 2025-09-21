@@ -39,6 +39,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin({
       patterns: [
+        { from: 'app-ads.txt', to: '.' },
         { from: 'manifest.json', to: '.' },
         { from: 'sw.js', to: '.' },
         { from: 'images', to: 'images' },
